@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+
+var loc = 0, counter = 0;
+var ans=[0,0,0,0];
+var questions = [
+		[ "What is the name of the method used to start a thread execution", "init();", "resume();", "start();" ],
+		[ "What is the value of d after this line of code has been executed: double d = Math.round ( 2.5 + Math.random() );", "2", "3", "2.5" ],
+		[ "What allows the programmer to destroy an object x","Only the garbage collection system can destroy an object","x.finalize()", "x.delete()"],
+		[ "You want subclasses in any package to have access to members of superclass. Which is most restrictive access that accomplishes this objective", "public", "protected", "transient"],
+        [ "public class Test { } - What is the prototype of the default constructor?", "public Test( )", "Test(void)", "Test( )"]	       
+		   ];
+var solution = ["start();","3","Only the garbage collection system can destroy an object","protected","public Test( )"];
+	
+$(document).ready(function() {
+ 
+mainPage();
+});
+ 
+function mainPage()
+{
+	 if('#scoreBoardDiv')
+	 { 
+	 $('#scoreBoardDiv').remove();
+	 }
+ if ('#questionDiv') 
+		{
+            $('#questionDiv').remove();
+	    }
+
+if(loc>=questions.length)
+	{  	   $('#mainDiv').remove();
+	        loc = 0;
+	}
+	var $mainDiv = $('<div>');
+	$mainDiv.attr('id','mainDiv');
+	$mainDiv.css({"border": "2px solid black",
+          'width': "1000",
+          'height': "100"});
+	$(document.body).append($mainDiv);
+	
+	var $para = $('<p>');
+	var $p_text = ('Fun Programming Quiz Time! Are you ready??');
+	$para.append($p_text);
+	$para.css({margin:"10px"})
+	var $btn = $('<button>');
+$btn.attr('id','mainBtn');
+$btn.css({background:"orange", width:"80px", height:"30px",margin:"10px"});
+$btn.text('Begin Quiz');
+$mainDiv.append($para);
+$mainDiv.append($btn);
+$btn.click(QuestionFrame);
+}; 
+    
+
+function QuestionFrame(){
+	
+		if(loc>0)
+	{
+	if ('#questionDiv') 
+		{
+            $('#questionDiv').remove();
+	    }
+	   if ($("[name='option']")) 
+		{
+		//calculation();
+		}
+	}
+	
+	
+	   $('#mainDiv').remove();
+	   var $questionDiv = $('<div>');
+	   $questionDiv.attr('id','questionDiv');
+	   $questionDiv.css({"border": "2px solid black",
+        'width': "1000",
+        'height': "170"});
+	   $(document.body).append($questionDiv);
+	   
+		
+		var $question_para = $('<p>')                      
+		.attr('id','question_para')
+		.attr('name','mainDiv')
+		.css({margin:"6px"})
+		.appendTo($questionDiv)
+		//question_para.style.fontSize = "20px";
+		var $br = $('<br>');
+		
+		
+		if(loc>=questions.length){
+		var $p_text2 =('You have finished answering all the questions!');
+		var $retestButton = $('<button>');
+        $retestButton.attr('id','retest');
+		$retestButton.text('Retest');
+		$retestButton.css({width:"80px", height:"30px",margin:"5px"});
+		$retestButton.click(mainPage);
+		
+		var $closeButton = $('<button>');
+		$closeButton.attr('id','close');
+		$closeButton.text('Close');
+		$closeButton.css({width:"80px", height:"30px",margin:"5px"});
+		$closeButton.click(finish);
+		
+		var $scoreButton = $('<button>');
+		$scoreButton.attr('id','close');
+		$scoreButton.text('Score');
+		$scoreButton.css({width:"100px", height:"30px", margin:"10px"});
+		$scoreButton.click(scoreCalculation);
+		
+		
+		$question_para.append($p_text2).appendTo($questionDiv);
+		$scoreButton.appendTo($questionDiv);
+		$retestButton.appendTo($questionDiv);
+		$closeButton.appendTo($questionDiv);
+        		
+		
+	}
+		
+		else{
+		var $p_text = ("Question "+(loc+1)+": "+questions[loc][0]+"?");
+		$question_para.append($p_text);	
+		$question_para.appendTo($questionDiv);
+		
+		for (i = 1; i <=3; i++) {
+		
+      var $radioBtn = $('<input/>')
+       .attr('id','radioId')
+       .attr('name','option')
+        .attr('type','radio')
+        .attr('value',questions[loc][i]).appendTo('#questionDiv');
+         //var $radioBtn = $('<input type="radio" name="option" text=questions[pos][i] value = questions[pos][i] />').appendTo('#questionDiv');
+		 var $radioText = questions[loc][i];
+		 var $radioLabel = $('<label>')
+		 .attr('id','radioLabel')
+		 .append($radioText)
+		 .appendTo($questionDiv)
+		  $('<br>').appendTo($questionDiv);
+		 
+        }
+		$('<br>').appendTo($questionDiv);
+		var $nextButton = $('<button>');
+		$para_text = ('Next Question');
+		$nextButton.append($para_text);
+		$nextButton.css({'margin':"6px",'padding': "5px", 'background': "yellow"});
+		$nextButton.attr('id','nextId');
+		$nextButton.click(validateAnswer);
+		$nextButton.appendTo($questionDiv);	
+	     loc++;
+		
+         }
+
+
+
+};
+
+
+
+function scoreCalculation()
+{
+	var $br = $('<br>');
+	$(document.body).append($br);
+	
+	
+	 if('#scoreBoardDiv')
+	 { $('#scoreBoardDiv').remove();
+	 
+	 }
+	counter = 0;
+	
+	var br = document.createElement('br');
+	
+	var $scoreBoardDiv = $('<scoreBoardDiv>')
+	.attr('id', 'scoreBoardDiv')
+	.css({'width': "800", 'height': "200"})
+     $(document.body).append($scoreBoardDiv);
+	 
+	 var $p_text3 =('SCORE BOARD'); 
+	 var $para3 = $('<p>')
+	 .css({margin:"20px"})
+	 $para3.append($p_text3);
+	 $para3.appendTo($scoreBoardDiv);
+	 
+		var $scoreTable = $('<table>')
+		.attr("id", "scoreTable")
+		.css({'border': "2px solid orange", 'margin': "25px", 'border-collapse': "collapse" });
+		$scoreTable.appendTo($scoreBoardDiv);
+		
+        
+		for(var i=0;i<questions.length;i++)
+		{ var points = 0;
+		var $tr = $('<tr>')
+		.attr("id", "tr1")
+		.css({'border': "2px solid orange", 'padding': "5px" });
+		$scoreTable.append($tr);
+		
+		var $td = $('<td>')
+		.css({'border': "2px solid orange", 'padding': "3px" ,'border-collapse': "collapse"});
+		var $td1 = $('<td>')
+		.css({'border': "2px solid orange", 'padding': "3px" ,'border-collapse': "collapse"});
+		
+		var $text = ("Correct Answer "+(i+1)+": "+solution[i]);
+			if(ans[i]==solution[i])
+			{
+			points = 1;
+			counter++;
+			}
+			
+			var $text1 = points;
+			var $para5 = $('<p>');
+			$para5.append($text1);
+			$td1.append($para5);
+			$td.append($text);
+			$tr.append($td);
+			$tr.append($td1);
+		}
+		var $para4 = $('<p>')
+		.css({'margin':"25px", 'font-size':"xx-large"})
+		
+		var $p_text4 =("The Total Score is: "+counter);
+		$para4.append($p_text4);
+		$para4.appendTo($scoreBoardDiv);
+};
+
+
+
+function validateAnswer(){
+
+ var $image = $('<img>')                      
+.attr('id','imageId')
+var timing = 400;
+var r = $("[name='option']");
+    for(var i = 0; i < r.length; i++)
+	{
+        if(r[i].checked) 
+	  {  ans[loc-1] = r[i].value;
+		if(r[i].value==solution[loc-1])
+		{
+		  $image.attr("src", "images/tick.png")
+		  .appendTo('#question_para');
+          
+        }
+        else
+		{	
+	     $image.attr("src", "images/cross.png")
+		 .appendTo('#question_para');
+        }
+	  }	
+      	  
+    }
+       setTimeout(function(){
+		  QuestionFrame();
+		}, timing);	
+};
+
+function finish()
+{
+window.close();
+};
+
+</script>
+
+</body>
+</html>

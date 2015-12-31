@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<body>
+<p><strong></strong> </p>
+<p id="demo"></p>
+
+<script>
+
+var loc = 0, counter = 0;
+var ans=[0,0,0,0];
+var questions = [
+		[ "What is the name of the method used to start a thread execution", "init();", "resume();", "start();" ],
+		[ "What is the value of d after this line of code has been executed: double d = Math.round ( 2.5 + Math.random() );", "2", "3", "2.5" ],
+		[ "What allows the programmer to destroy an object x","Only the garbage collection system can destroy an object","x.finalize()", "x.delete()"],
+		[ "You want subclasses in any package to have access to members of superclass. Which is most restrictive access that accomplishes this objective", "public", "protected", "transient"],
+        [ "public class Test { } - What is the prototype of the default constructor?", "public Test( )", "Test(void)", "Test( )"]	       
+		   ];
+var solution = ["start();","3","Only the garbage collection system can destroy an object","protected","public Test( )"];
+	
+function mainPage(){
+    var scoreBoard = document.getElementById("scoreBoardDiv");
+	 if(scoreBoard)
+	 { 
+	 scoreBoard.parentNode.removeChild(scoreBoard);
+	 }
+    var br = document.createElement('br');
+    if(loc>=questions.length)
+	{  removeDivision();
+	   loc = 0;
+	}
+	var mainDiv = document.createElement("div");
+	mainDiv.id = "mainDiv"
+	mainDiv.style.width = "1000px";
+	mainDiv.style.height = "100px";
+	mainDiv.style.color = "black";
+	mainDiv.innerHTML = "<br><b>Fun Programming Quiz Time! Are you ready??</b><br>";
+	mainDiv.style.fontSize = "25px";
+	var para = document.createElement("p");
+	var p_text = document.createTextNode("Read the Instructions carefully!");
+	para.appendChild(p_text);
+	var para1 = document.createElement("p");
+	var p_text1 = document.createTextNode("The test is not timed. You cannot skip any questions. Carefully select one option. The test moves to next question immediately after selection. No negative marking.");
+	para1.appendChild(p_text1);
+	var btn  = document.createElement("BUTTON");
+	var b_text = document.createTextNode("Begin Quiz");
+	btn.appendChild(b_text);
+	btn.style.padding="10px";
+	btn.style.background="orange";
+	mainDiv.appendChild(para);
+	mainDiv.appendChild(br);
+	mainDiv.appendChild(para1);
+	mainDiv.appendChild(br);
+	mainDiv.appendChild(btn);
+	//mainDiv.appendChild(mainDiv);
+	document.body.appendChild(mainDiv);
+    btn.addEventListener("click",QuestionFrame);
+    
+}
+
+function QuestionFrame(){
+		var ques = document.getElementById("questionDiv");
+		if(loc>0)
+	{
+		if (document.getElementsByName('option')) 
+		{
+		calculation();
+		}
+	    if (ques) 
+		{
+            ques.parentNode.removeChild(ques);
+	    }
+	}
+		var main = document.getElementById('mainDiv');
+		main.style.visibility="hidden";
+	    var questionDiv = document.createElement("div");
+	    questionDiv.id = "questionDiv";
+		questionDiv.style.border= "3px solid blue";
+		var field = document.createElement("fieldset");
+		field.id = "fieldset";
+		var question_para = document.createElement("p");
+		question_para.id="question_para";
+		question_para.style.fontSize = "20px";
+		var br = document.createElement('br');
+		
+	if(loc>=questions.length){
+		var p_text2 = document.createTextNode("You have finished answering all the questions!");
+		var retestButton = document.createElement("button");
+		retestButton.appendChild(document.createTextNode("Retest"));
+		retestButton.style.margin="10px";
+		retestButton.addEventListener("click",mainPage);
+		var closeButton = document.createElement("button");
+		closeButton.appendChild(document.createTextNode("Close"));
+		closeButton.addEventListener("click",finish);
+		var scoreButton = document.createElement("button");
+		scoreButton.appendChild(document.createTextNode("Calculate Score"));
+		scoreButton.addEventListener("click",scoreCalculation);
+		question_para.appendChild(p_text2);	
+		field.appendChild(question_para);
+		field.appendChild(scoreButton);
+		field.appendChild(retestButton);
+		field.appendChild(closeButton);
+		document.body.appendChild(field); 
+		document.body.appendChild(br);
+	}
+	else{
+		
+		var nextButton = document.createElement("button");
+		nextButton.appendChild(document.createTextNode("Next Question"));
+		nextButton.style.padding="10px";
+		nextButton.style.background="yellow";
+		nextButton.addEventListener("click",validateAnswer);
+		var p_text3 = document.createTextNode("Question "+(loc+1)+": "+questions[loc][0]+"?");
+		question_para.appendChild(p_text3);	
+		field.appendChild(question_para);
+		var one = generateRadio("option", questions[loc][1], questions[loc][1]);
+		field.appendChild(one);	
+		var two = generateRadio("option", questions[loc][2], questions[loc][2]); 
+		field.appendChild(two);
+		var three = generateRadio("option", questions[loc][3], questions[loc][3]); 
+		field.appendChild(three);
+		field.appendChild(br);
+		field.appendChild(nextButton);
+		questionDiv.appendChild(field);
+		document.body.appendChild(questionDiv);
+		loc++;
+}
+
+}
+
+function removeDivision()
+{
+      var field = document.getElementById("fieldset");
+		if(field) 
+		{ field.parentNode.removeChild(field);
+		}
+	  var main = document.getElementById("mainDiv");
+		if(main) 
+		{ main.parentNode.removeChild(main);
+		}
+}
+
+function generateRadio(name, value, text) 
+{
+  var radio = document.createElement("input");
+  var br = document.createElement('br');
+  var label = document.createElement("label");
+		radio.type = "radio";
+		radio.name = name;
+		radio.value = value;
+		radio.id = "r_Id";
+		label.appendChild(radio);
+		label.style.fontSize="20px";
+		label.appendChild(document.createTextNode(text));
+		label.appendChild(br);
+		return label;
+  }
+
+function validateAnswer(){
+
+        var para2 = document.getElementById('question_para');
+		var timing = 400;
+        var image = document.createElement("img");
+		image.setAttribute("height", "20");
+		image.setAttribute("width", "20");
+        var r = document.getElementsByName('option');
+    for(var i = 0; i < r.length; i++)
+	{
+        if(r[i].checked) 
+	  {
+		if(r[i].value==solution[loc-1])
+		{
+		  image.setAttribute("src", "images/tick.png");
+          para2.appendChild(image);
+        }
+        else
+		{	
+	     image.setAttribute("src", "images/cross.png");
+	     para2.appendChild(image);
+        }
+	  }	 
+    }   setTimeout(function(){
+		  QuestionFrame();
+		}, timing);	
+}
+
+function calculation()
+{
+        var r = document.getElementsByName('option');
+		for (var i = 0, length = r.length; i <= length; i++) 
+		{
+			if (r[i].checked) 
+			{
+				ans[loc-1] = r[i].value;
+				break;
+			}	           			
+        }
+}
+	
+function scoreCalculation()
+{   
+	var scoreBoard = document.getElementById("scoreBoardDiv");
+	 if(scoreBoard)
+	 { 
+	 scoreBoard.parentNode.removeChild(scoreBoard);
+	 }
+	counter = 0;
+	var para3 = document.createElement("p");
+	var para4 = document.createElement("p");
+	var br = document.createElement('br');
+	var scoreBoardDiv = document.createElement("div");
+			scoreBoardDiv.setAttribute("id", "scoreBoardDiv");
+			scoreBoardDiv.style.border= "3px solid orange";
+			scoreBoardDiv.style.width= "400";
+			scoreBoardDiv.style.height = "700";
+		document.body.appendChild(scoreBoardDiv);
+		var p_text3 = document.createTextNode("<SCORE BOARD>"); 
+		para3.appendChild(p_text3);
+		para3.style.margin="25px";
+		para3.style.fontSize="xx-large";
+		scoreBoardDiv.appendChild(para3);
+		var scoreTable = document.createElement("table");
+		scoreTable.setAttribute("id", "scoreTable");
+		scoreTable.style.border= "2px solid black";
+		scoreTable.style.margin="25px";
+        scoreTable.style.borderCollapse = "collapse";
+		scoreBoardDiv.appendChild(scoreTable);
+		for(var i=0;i<questions.length;i++)
+		{ var points = 0;
+		var tr = document.createElement("tr");
+		tr.setAttribute("id", "tr1");
+		tr.style.border= "2px solid black";
+        tr.style.padding= "10px"
+		scoreTable.appendChild(tr);
+		
+		var td = document.createElement("td");
+		td.setAttribute("id", "tr1");
+		td.style.border= "2px solid black";
+		td.style.borderCollapse = "collapse";
+		td.style.padding= "5px"
+		
+		var td1 = document.createElement("td");
+		td1.setAttribute("id", "tr2");
+		td1.style.border= "2px solid black";
+		td1.style.borderCollapse = "collapse";
+		td1.style.padding= "5px"
+		
+		var text = document.createTextNode("Correct Answer "+(i+1)+": "+solution[i]);
+		
+			if(ans[i]==solution[i])
+			{
+			points = 1;
+			counter++;
+			}
+			var text1 = document.createTextNode(points);
+			td.appendChild(text);
+			td1.appendChild(text1);
+			tr.appendChild(td);
+			tr.appendChild(td1);
+		}
+		var p_text4 = document.createTextNode("The Total Score is: "+counter);
+		para4.appendChild(p_text4);
+		para4.style.margin="25px";
+		para4.style.fontSize="xx-large";
+		para4.style.font="italic bold 20px arial,serif";
+		scoreBoardDiv.appendChild(para4);
+}
+
+function finish()
+{
+window.close();
+}  
+  window.addEventListener("load", mainPage, false);
+</script>
+
+</body>
+</html>
